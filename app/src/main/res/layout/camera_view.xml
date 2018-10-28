@@ -4,24 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.patricksferraz.classcau.view.CameraView" >
+    tools:context="br.com.patricksferraz.classcau.view.CameraView"
+    android:id="@+id/test" >
 
     <TextureView
         android:id="@+id/textureView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <!--android:layout_above="@+id/btnCapture"-->
+        android:layout_height="match_parent"/>
 
     <Button
         android:id="@+id/btnCapture"
-        android:text="Capturar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_launcher_foreground"
+        app:backgroundTint="@color/colorPrimary"/>
 
-    <LinearLayout
-        android:layout_centerInParent="true"
-        android:background="@drawable/rectangle"
-        android:layout_width="200dp"
-        android:layout_height="200dp" />
+    <!--<LinearLayout-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:background="@drawable/rectangle"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="200dp" />-->
 </RelativeLayout>

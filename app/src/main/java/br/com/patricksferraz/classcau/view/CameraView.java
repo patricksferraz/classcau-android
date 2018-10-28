@@ -1,11 +1,18 @@
 package br.com.patricksferraz.classcau.view;
 
 import android.Manifest;
+import android.arch.lifecycle.AndroidViewModel;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -17,6 +24,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -24,13 +32,19 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -93,7 +107,9 @@ public class CameraView extends AppCompatActivity {
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
+    // OTHERS
     private File galleryFolder; // TODO: REMOVE: TEMP
+    private LinearLayout q;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +119,7 @@ public class CameraView extends AppCompatActivity {
         stateCallBack = initStateCallBack();
         textureListener = initSurfaceTextureListener();
 
-        createImageGallery(); // TODO: REMOVE: Criando galeria
+//        createImageGallery(); // TODO: REMOVE: Criando galeria
 
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
@@ -294,6 +310,7 @@ public class CameraView extends AppCompatActivity {
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
+            //Environment.getExternalStorageDirectory()
             file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/" + UUID.randomUUID().toString() + ".jpg");
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -367,6 +384,17 @@ public class CameraView extends AppCompatActivity {
      */
     private void createCameraPreview() {
         try {
+            // TODO: HACK: GAMBI
+            RelativeLayout teste = (RelativeLayout) findViewById(R.id.test);
+            Drawable drawable = getDrawable(R.drawable.rectangle);
+            LinearLayout q = new LinearLayout(this);
+            q.setBackground(drawable);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(textureView.getWidth()-(textureView.getWidth()*38/100), textureView.getHeight());
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+            params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+            teste.addView(q, params);
+            // END GAMBI
+
             // Principal classe por traś do textureView
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
