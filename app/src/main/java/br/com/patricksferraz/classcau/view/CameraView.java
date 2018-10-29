@@ -1,18 +1,10 @@
 package br.com.patricksferraz.classcau.view;
 
 import android.Manifest;
-import android.arch.lifecycle.AndroidViewModel;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -24,7 +16,6 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -32,18 +23,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.Display;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -53,12 +38,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 import br.com.patricksferraz.classcau.R;
@@ -68,15 +50,19 @@ import br.com.patricksferraz.classcau.R;
  * - TextureView p/ camera preview (camera_view.xml)
  * - android:windowTranslucentStatus p/ utilizar todo espaço da tela (styles.xml)
  * - requestPermissions p/ utilizar a camera
- * - cameraFacing p/ setar a camera
+ * - cameraFacing p/ setar a camera // NÃO UTILIZADO
  * - surfaceTextureListener p/ configurar a camera preview
  */
 
 public class CameraView extends AppCompatActivity {
 
+    // Constantes
+    static final double PROPORTION_TABLET_CAMERA_HEIGHT = 0.62;
+
     // Componentes da interface
     private Button btnCapture;
     private TextureView textureView;
+    private RelativeLayout layoutCamera;
 
     // Camera, estado e ações
     private CameraDevice cameraDevice;
@@ -84,7 +70,7 @@ public class CameraView extends AppCompatActivity {
     private TextureView.SurfaceTextureListener textureListener;
 
     // Permissão de uso e informações da camera
-    private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private static final int REQUEST_CAMERA_PERMISSION = 0;
     private String cameraId;
     private Size imageDimension;
     private CameraCaptureSession cameraCaptureSessions;
@@ -107,19 +93,19 @@ public class CameraView extends AppCompatActivity {
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-    // OTHERS
-    private File galleryFolder; // TODO: REMOVE: TEMP
-    private LinearLayout q;
+    // Moldura da câmera
+    private CanvasView cameraFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_view);
 
+        cameraFrame = new CanvasView(this);
+        layoutCamera = (RelativeLayout) findViewById(R.id.layoutCamera);
+
         stateCallBack = initStateCallBack();
         textureListener = initSurfaceTextureListener();
-
-//        createImageGallery(); // TODO: REMOVE: Criando galeria
 
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
@@ -252,6 +238,13 @@ public class CameraView extends AppCompatActivity {
             // Executando a camera com as configurações de escolha
             manager.openCamera(cameraId, stateCallBack, null);
 
+            // Desenhando a moldura na câmera
+            // TODO: NOTE: VERIFICAR IMAGEDIMENSION ESTÁ REGISTRANDO VALOR INCORRETO
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(textureView.getWidth(), textureView.getHeight());
+            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            layoutCamera.addView(cameraFrame, params);
+
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -311,7 +304,7 @@ public class CameraView extends AppCompatActivity {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
             //Environment.getExternalStorageDirectory()
-            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/" + UUID.randomUUID().toString() + ".jpg");
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + UUID.randomUUID().toString() + ".jpg");
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
@@ -332,13 +325,8 @@ public class CameraView extends AppCompatActivity {
                     }
                 }
                 private void save(byte[] bytes) throws IOException {
-                    //OutputStream outputStream = null;
-                    FileOutputStream outputStream = null;
+                    OutputStream outputStream = null;
                     try {
-                        // TODO: REMOVE: OTHER WAY
-//                        outputStream = new FileOutputStream(createImageFile(galleryFolder));
-//                        textureView.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-
                         outputStream = new FileOutputStream(file);
                         outputStream.write(bytes);
                     } finally {
@@ -384,17 +372,6 @@ public class CameraView extends AppCompatActivity {
      */
     private void createCameraPreview() {
         try {
-            // TODO: HACK: GAMBI
-            RelativeLayout teste = (RelativeLayout) findViewById(R.id.test);
-            Drawable drawable = getDrawable(R.drawable.rectangle);
-            LinearLayout q = new LinearLayout(this);
-            q.setBackground(drawable);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(textureView.getWidth()-(textureView.getWidth()*38/100), textureView.getHeight());
-            params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-            params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-            teste.addView(q, params);
-            // END GAMBI
-
             // Principal classe por traś do textureView
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
@@ -411,20 +388,8 @@ public class CameraView extends AppCompatActivity {
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     if (cameraDevice == null)
                         return;
-
                     cameraCaptureSessions = cameraCaptureSession;
                     updatePreview();
-
-                    // TODO: REMOVE: OTHER WAY
-//                    try {
-//                        CaptureRequest captureRequest = captureRequestBuilder.build();
-//                        cameraCaptureSessions = cameraCaptureSessions;
-//                        cameraCaptureSessions.setRepeatingRequest(captureRequest, null, mBackgroundHandler);
-//                     //   updatePreview();
-//                    } catch (CameraAccessException e) {
-//                        e.printStackTrace();
-//                    }
-
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
@@ -449,25 +414,6 @@ public class CameraView extends AppCompatActivity {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    // TODO: HACK: VERIFICAR FUNCIONALIDADE DE CRIAR DIRETÓRIO
-    private void createImageGallery() {
-        File storageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        galleryFolder = new File(storageDirectory, getResources().getString(R.string.app_name));
-        if (!galleryFolder.exists()) {
-            boolean wasCreated = galleryFolder.mkdirs();
-            if (!wasCreated) {
-                Log.e("CapturedImages", "Failed to create directory");
-            }
-        }
-    }
-
-    // TODO: HACK: VERIFICAR FUNCIONALIDADE DE CRIAR IMAGEM PAR ARMAZENAR
-    private File createImageFile(File galleryFolder) throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "image_" + timeStamp + "_";
-        return File.createTempFile(imageFileName, ".jpg", galleryFolder);
     }
 
     /**

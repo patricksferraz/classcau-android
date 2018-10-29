@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.patricksferraz.classcau.view.CameraView"
-    android:id="@+id/test" >
+    android:id="@+id/layoutCamera" >
 
     <TextureView
         android:id="@+id/textureView"
@@ -19,8 +19,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:backgroundTint="@color/colorPrimary"/>
+        android:background="@drawable/button_circle" />
 
     <!--<LinearLayout-->
         <!--android:layout_centerInParent="true"-->
