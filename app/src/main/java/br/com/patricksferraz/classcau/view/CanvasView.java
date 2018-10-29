@@ -11,6 +11,8 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.View;
 
+import br.com.patricksferraz.classcau.R;
+
 public class CanvasView extends View {
     private Paint paint;
     private Rect rect;
@@ -27,7 +29,7 @@ public class CanvasView extends View {
         super.onDraw(canvas);
 
         //paint.setColor(Color.argb(100,250,173,25)); // Color orange
-        paint.setColor(Color.argb(155,0,0,0));
+        paint.setColor(getResources().getColor(R.color.colorTransparentBlack));
         paint.setStrokeWidth(3);
 
         double proporcion = getWidth()*CameraView.PROPORTION_TABLET_CAMERA_HEIGHT;
@@ -36,10 +38,10 @@ public class CanvasView extends View {
         canvas.drawRect(0,0, (float) stripeBottomSize, getHeight(),paint);
         canvas.drawRect((float) stripeTopSize,0, getWidth(),getHeight(),paint);
 
-        String text = "Posicione a tábua de corte nos limites do retângulo claro";
+        String text = getResources().getString(R.string.msg_camera_preview);
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(255,255,255));
+        paint.setColor(getResources().getColor(R.color.colorWhite));
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(28);
 

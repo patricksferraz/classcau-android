@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Classcau</string>
-    <string name="load_image">Ler Imagem</string>
+    <string name="msg_camera_preview">Posicione a tábua de corte nos limites do retângulo claro</string>
 </resources>
