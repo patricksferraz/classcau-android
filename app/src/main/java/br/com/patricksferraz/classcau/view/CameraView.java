@@ -101,15 +101,17 @@ public class CameraView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_view);
 
-        cameraFrame = new CanvasView(this);
-        layoutCamera = (RelativeLayout) findViewById(R.id.layoutCamera);
-
         stateCallBack = initStateCallBack();
         textureListener = initSurfaceTextureListener();
 
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
+
+        // Desenhando a moldura na câmera
+        cameraFrame = new CanvasView(this);
+        layoutCamera = (RelativeLayout) findViewById(R.id.layoutCamera);
+        layoutCamera.addView(cameraFrame);
 
         btnCapture = (Button)findViewById(R.id.btnCapture);
         btnCapture.setOnClickListener(new View.OnClickListener() {
@@ -237,13 +239,6 @@ public class CameraView extends AppCompatActivity {
 
             // Executando a camera com as configurações de escolha
             manager.openCamera(cameraId, stateCallBack, null);
-
-            // Desenhando a moldura na câmera
-            // TODO: NOTE: VERIFICAR IMAGEDIMENSION ESTÁ REGISTRANDO VALOR INCORRETO
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(textureView.getWidth(), textureView.getHeight());
-            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            layoutCamera.addView(cameraFrame, params);
-
 
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -409,6 +404,7 @@ public class CameraView extends AppCompatActivity {
         if (cameraDevice == null)
             Toast.makeText(this, "Erro", Toast.LENGTH_SHORT).show();
         captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_AUTO);
+
         try {
             cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
         } catch (CameraAccessException e) {
