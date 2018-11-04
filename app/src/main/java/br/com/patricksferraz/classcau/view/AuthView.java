@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import br.com.patricksferraz.classcau.R;
 
-public class InitialView extends AppCompatActivity {
+public class AuthView extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

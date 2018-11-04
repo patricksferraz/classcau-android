@@ -1,23 +1,18 @@
 package br.com.patricksferraz.classcau.view;
 
 import android.content.Context;
-import android.graphics.Camera;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 import android.view.View;
 
 import br.com.patricksferraz.classcau.R;
 
-public class CanvasView extends View {
+public class CanvasShow extends View {
     private Paint paint;
     private Rect rect;
 
-    public CanvasView(Context context){
+    public CanvasShow(Context context){
         super(context);
         //| Paint.LINEAR_TEXT_FLAG
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -32,7 +27,7 @@ public class CanvasView extends View {
         paint.setColor(getResources().getColor(R.color.colorTransparentBlack));
         paint.setStrokeWidth(3);
 
-        double proporcion = getWidth()*CameraView.PROPORTION_TABLET_CAMERA_HEIGHT;
+        double proporcion = getWidth()*CameraShow.PROPORTION_TABLET_CAMERA_HEIGHT;
         double stripeBottomSize = (getWidth() - proporcion)/2;
         double stripeTopSize = proporcion + stripeBottomSize;
         canvas.drawRect(0,0, (float) stripeBottomSize, getHeight(),paint);

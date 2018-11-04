@@ -54,7 +54,7 @@ import br.com.patricksferraz.classcau.R;
  * - surfaceTextureListener p/ configurar a camera preview
  */
 
-public class CameraView extends AppCompatActivity {
+public class CameraShow extends AppCompatActivity {
 
     // Constantes
     static final double PROPORTION_TABLET_CAMERA_HEIGHT = 0.62;
@@ -94,7 +94,7 @@ public class CameraView extends AppCompatActivity {
     }
 
     // Moldura da câmera
-    private CanvasView cameraFrame;
+    private CanvasShow cameraFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class CameraView extends AppCompatActivity {
         textureView.setSurfaceTextureListener(textureListener);
 
         // Desenhando a moldura na câmera
-        cameraFrame = new CanvasView(this);
+        cameraFrame = new CanvasShow(this);
         layoutCamera = (RelativeLayout) findViewById(R.id.layoutCamera);
         layoutCamera.addView(cameraFrame);
 
@@ -336,7 +336,7 @@ public class CameraView extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CameraView.this, "Salvo " + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CameraShow.this, "Salvo " + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
             };
@@ -388,7 +388,7 @@ public class CameraView extends AppCompatActivity {
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(CameraView.this, "Falhou", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CameraShow.this, "Falhou", Toast.LENGTH_SHORT).show();
                 }
             }, null);
 
