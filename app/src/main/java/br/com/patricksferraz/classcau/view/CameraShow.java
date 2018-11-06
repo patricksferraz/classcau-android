@@ -47,7 +47,7 @@ import br.com.patricksferraz.classcau.R;
 
 /**
  * TODO: NOTE: Informações úteis sobre API camera
- * - TextureView p/ camera preview (camera_view.xml)
+ * - TextureView p/ camera preview (camera_show.xml)
  * - android:windowTranslucentStatus p/ utilizar todo espaço da tela (styles.xml)
  * - requestPermissions p/ utilizar a camera
  * - cameraFacing p/ setar a camera // NÃO UTILIZADO
@@ -99,7 +99,7 @@ public class CameraShow extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera_view);
+        setContentView(R.layout.camera_show);
 
         stateCallBack = initStateCallBack();
         textureListener = initSurfaceTextureListener();
