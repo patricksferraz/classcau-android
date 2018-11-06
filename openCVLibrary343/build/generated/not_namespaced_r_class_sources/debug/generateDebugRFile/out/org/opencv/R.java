@@ -15,6 +15,11 @@ public final class R {
         public static int camera_id = 0x7f040001;
         public static int show_fps = 0x7f040002;
     }
+    public static final class color {
+        private color() {}
+
+        public static int primary_dark_material_light = 0x7f060001;
+    }
     public static final class id {
         private id() {}
 

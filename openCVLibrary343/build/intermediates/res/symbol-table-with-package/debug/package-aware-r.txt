@@ -1,6 +1,7 @@
 org.opencv
 attr camera_id
 attr show_fps
+color primary_dark_material_light
 id any
 id back
 id front

@@ -1,5 +1,6 @@
 int attr camera_id 0x7f040001
 int attr show_fps 0x7f040002
+int color primary_dark_material_light 0x7f060001
 int id any 0x7f0c0001
 int id back 0x7f0c0002
 int id front 0x7f0c0003

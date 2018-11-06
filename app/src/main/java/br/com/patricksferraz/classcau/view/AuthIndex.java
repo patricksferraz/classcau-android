@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import br.com.patricksferraz.classcau.R;
 
-public class InitialView extends AppCompatActivity {
+public class AuthIndex extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.initial_view);
+        setContentView(R.layout.auth_index);
     }
 }
