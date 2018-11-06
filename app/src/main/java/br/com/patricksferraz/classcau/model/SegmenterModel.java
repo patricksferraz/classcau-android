@@ -62,7 +62,13 @@ public class SegmenterModel {
             // Desfoque da imagem
             Imgproc.GaussianBlur(aux, aux, s_blur, 0);
             // Converte imagem para preto & branco
-            Imgproc.threshold(aux, aux, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
+            Imgproc.threshold(aux, bw_image, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
+            // Erosão da imagem
+            Imgproc.erode(bw_image, bw_image, empty, ed_point, 3);
+            empty.release();
+            // Dilatação da imagem
+            Imgproc.dilate(bw_image, aux, empty, ed_point, 3);
+            empty.release();
             // Inverte Black <=> White
             Core.bitwise_not(aux, bw_image);
             // Detecta bordas com canny
