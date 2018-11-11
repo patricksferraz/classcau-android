@@ -71,8 +71,6 @@ public class SegmenterModel {
             empty.release();
             // Inverte Black <=> White
             Core.bitwise_not(aux, bw_image);
-            // Detecta bordas com canny
-            Imgproc.Canny(bw_image, canny_image, 255, 255);
             // Aplica um "recorte" na imagem original utilizando c imagem preto e branco como mask
             Core.bitwise_and(roi_image, roi_image, result, bw_image);
             // Convertendo para padrão de cor c/transparencia
