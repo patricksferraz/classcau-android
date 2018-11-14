@@ -122,16 +122,6 @@ public class CameraShow extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Você não pode usar a câmera sem permissão", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
-
     /**
      * Método executado com o restart da activity
      */
@@ -153,6 +143,16 @@ public class CameraShow extends AppCompatActivity {
         super.onPause();
         stopCamera(); // TODO: NOTE: Adicionado após a camera está pronta
         stopBackgroundThread();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Você não pode usar a câmera sem permissão", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
     /**
@@ -413,6 +413,15 @@ public class CameraShow extends AppCompatActivity {
     }
 
     /**
+     * Método para iniciar uma thread em segundo plano
+     */
+    private void startBackgroundThread() {
+        mBackgroundThread = new HandlerThread("Camera Background");
+        mBackgroundThread.start();
+        mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+    }
+
+    /**
      * Método para finalizar a thread de forma segura
      */
     private void stopBackgroundThread() {
@@ -432,12 +441,4 @@ public class CameraShow extends AppCompatActivity {
         }
     }
 
-    /**
-     * Método para iniciar uma thread em segundo plano
-     */
-    private void startBackgroundThread() {
-        mBackgroundThread = new HandlerThread("Camera Background");
-        mBackgroundThread.start();
-        mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
-    }
 }
