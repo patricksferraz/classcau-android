@@ -85,4 +85,9 @@ public class SegmenterModel {
             contours.clear();
         }
     }
+
+    public static List<Rect> managesRoi(Mat src_image) {
+        List<Rect> roi = null;
+        return roi;
+    }
 }
